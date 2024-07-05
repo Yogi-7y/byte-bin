@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 func home(w http.ResponseWriter, r *http.Request) {
@@ -15,7 +17,13 @@ func home(w http.ResponseWriter, r *http.Request) {
 }
 
 func byteView(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Viewing a specific byte!"))
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil || id < 1 {
+		http.NotFound(w, r)
+		return
+	}
+
+	fmt.Fprintf(w, "Displaying information for byte with ID %d", id)
 }
 
 func byteCreate(w http.ResponseWriter, r *http.Request) {
